@@ -80,7 +80,8 @@ program
   .option('-H --headers [header]', 'set a header', collect, [])
   .option('-d --data [data]', 'send form data (of type application/x-www-form-urlencoded if it doesn\'t look like json)', collect, [])
   .option('-e --extract [property]', 'extract a property from the response using a property chain e.g. \'supplier.primaryContact.tel\' ')
-  .option('-m --map [func]', 'map over an array, extracting property using a property chain e.g. \'name.email\'')
+  .option('-m --map [func]', `map over an array, extracting property using a property chain e.g. \'name.email\'
+Will output multiple values if -m is specified multiple times`, collect, [])
   // .option('-u [user]', 'authenticate with basic auth')
   .action(function (url, options) {
     if (!url) {
@@ -106,7 +107,13 @@ program
           json = extractProperty(json, options.extract)
         }
         if (options.map) {
-          json = json.map(item => extractProperty(item, options.map))
+          if (options.map.length === 1) {
+            json = json.map(item => extractProperty(item, options.map[0]))
+          } else {
+            json = json.map(item =>
+              options.map.map(propChain => extractProperty(item, propChain))
+            )
+          }
         }
         console.log(JSON.stringify(json, null, 2))
       })
