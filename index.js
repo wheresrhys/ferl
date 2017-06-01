@@ -72,7 +72,7 @@ function extractProperty(json, props) {
 
 program
   .version('0.2.1')
-  // .command('*')
+  .usage('ferl <URL> [options]')
   .arguments('<URL>')
   .description('subset of curl with added json parsing')
   .option('-X --method [method]', 'http method to use')

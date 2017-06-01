@@ -2,7 +2,7 @@
 The unholy union of fetch and curl
 
 ```
-  Usage: index [options] <URL>
+  Usage: ferl <URL> [options]
 
   subset of curl with added json parsing
 
@@ -16,4 +16,5 @@ The unholy union of fetch and curl
     -d --data [data]         send form data (of type application/x-www-form-urlencoded if it doesn't look like json)
     -e --extract [property]  extract a property from the response using a property chain e.g. 'supplier.primaryContact.tel'
     -m --map [func]          map over an array, extracting property using a property chain e.g. 'name.email'
+    Will output multiple values if -m is specified multiple times
 ```
