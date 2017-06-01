@@ -1,0 +1,27 @@
+{
+  "name": "ferl",
+  "version": "1.0.0",
+  "description": "The unholy union of fetch and curl",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "ferl": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wheresrhys/ferl.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wheresrhys/ferl/issues"
+  },
+  "homepage": "https://github.com/wheresrhys/ferl#readme",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "node-fetch": "^1.7.0"
+  }
+}
