@@ -70,18 +70,30 @@ function extractProperty(json, props) {
   return json;
 }
 
+function filterProperty (json, query) {
+  let [all, props, val] = /([\w-\.]+)(?:\=(.*))/.exec(query)
+  const prop = extractProperty(json, props);
+  if (typeof val === 'undefined') {
+    return !!prop;
+  }
+
+  return prop == val;
+}
+
 program
   .version('0.2.1')
   .usage('ferl <URL> [options]')
   .arguments('<URL>')
-  .description('subset of curl with added json parsing')
+  .description('subset of curl with added json traversal')
   .option('-X --method [method]', 'http method to use')
   .option('-L --redirect', 'follow redirects')
   .option('-H --headers [header]', 'set a header', collect, [])
   .option('-d --data [data]', 'send form data (of type application/x-www-form-urlencoded if it doesn\'t look like json)', collect, [])
   .option('-e --extract [property]', 'extract a property from the response using a property chain e.g. \'supplier.primaryContact.tel\' ')
-  .option('-m --map [func]', `map over an array, extracting property using a property chain e.g. \'name.email\'
+  .option('-m --map [property]', `map over an array, extracting property using a property chain e.g. \'name.email\'
 Will output multiple values if -m is specified multiple times`, collect, [])
+  .option('-f --filter [property=value]', `filter an array, checking property using a property chain e.g. \'name.email\'
+Will filter on multiple values if -f is specified multiple times`, collect, [])
   // .option('-u [user]', 'authenticate with basic auth')
   .action(function (url, options) {
     if (!url) {
@@ -106,7 +118,12 @@ Will output multiple values if -m is specified multiple times`, collect, [])
         if (options.extract) {
           json = extractProperty(json, options.extract)
         }
-        if (options.map) {
+        if (options.filter.length) {
+          options.filter.forEach(filter => {
+            json = json.filter(item => filterProperty(item, filter))
+          })
+        }
+        if (options.map.length) {
           if (options.map.length === 1) {
             json = json.map(item => extractProperty(item, options.map[0]))
           } else {
